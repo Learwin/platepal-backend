@@ -5,5 +5,5 @@ CREATE TABLE ZutatDerWoche (
     BIS                         DATE            NOT NULL,
 
     PRIMARY KEY (ID),
-    FOREIGN KEY (ZUTAT_ID) REFERENCES Zutat(ID)
+    FOREIGN KEY (ZUTAT_ID) REFERENCES Zutat(ID) ON DELETE CASCADE
 );
