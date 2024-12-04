@@ -23,4 +23,5 @@ public class ZutatDerWocheController {
     List<ZutatDerWoche> index() {
         return zutatDerWocheRepository.findAll();
     }
+
 }
