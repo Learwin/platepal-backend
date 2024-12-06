@@ -1,5 +1,6 @@
 package com.github.learwin.platepalbackend.entity;
 
+import com.github.learwin.platepalbackend.image.IImage;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.Column;
@@ -9,7 +10,7 @@ import jakarta.validation.constraints.Size;
 
 @Serdeable
 @Entity
-public class Zutat {
+public class Zutat implements IImage {
 
     @Id
     @GeneratedValue(GeneratedValue.Type.AUTO)
@@ -129,10 +130,12 @@ public class Zutat {
         this.salz = salz;
     }
 
+    @Override
     public @Size(max = 255) String getFoto() {
         return foto;
     }
 
+    @Override
     public void setFoto(@Size(max = 255) String foto) {
         this.foto = foto;
     }

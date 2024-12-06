@@ -6,5 +6,8 @@ import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.repository.PageableRepository;
 
 @JdbcRepository(dialect = Dialect.MYSQL)
-public interface RezeptRepository extends PageableRepository<Rezept, Long> {
+public interface
+
+
+RezeptRepository extends PageableRepository<Rezept, Long> {
 }
