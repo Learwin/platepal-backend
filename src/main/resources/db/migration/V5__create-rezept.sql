@@ -8,6 +8,7 @@ CREATE TABLE Rezept (
     USER_ID                     BIGINT           NULL,
     DURCHSCHNITTLICHE_BEWERTUNG BIGINT           NULL,
     ZUTAT_ID                    BIGINT          NULL,
+    NAME                       VARCHAR(255)    NULL,
 
     CONSTRAINT pk_id PRIMARY KEY (ID)
 
