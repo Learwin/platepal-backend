@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 
 @Serdeable
 @Entity
-public class Rezept {
+public class Rezept{
     @Id
     @GeneratedValue(GeneratedValue.Type.AUTO)
     private Long id;
@@ -27,19 +27,31 @@ public class Rezept {
 
     private int userId;
 
+    public @Size(max = 255) String getName() {
+        return name;
+    }
+
+    public void setName(@Size(max = 255) String name) {
+        this.name = name;
+    }
+
+    @Size(max = 255)
+    private String name;
+
     @Column(name = "durchschnittliche_bewertung")
     private Float durchschnittlicheBewertung;
 
     public Rezept() {
     }
 
-    public Rezept(String anweisungen, int zeit, int schwierigkeit, int defaultPortionen, String foto, int userId, Float durchschnittlicheBewertung) {
+    public Rezept(String anweisungen, int zeit, int schwierigkeit, int defaultPortionen, String foto, int userId, String name, Float durchschnittlicheBewertung) {
         this.anweisungen = anweisungen;
         this.zeit = zeit;
         this.schwierigkeit = schwierigkeit;
         this.defaultPortionen = defaultPortionen;
         this.foto = foto;
         this.userId = userId;
+        this.name = name;
         this.durchschnittlicheBewertung = durchschnittlicheBewertung;
     }
 
