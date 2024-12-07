@@ -11,6 +11,11 @@ import io.micronaut.http.annotation.*;
 import io.micronaut.http.multipart.CompletedFileUpload;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 import java.io.File;
@@ -21,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller("/zutat")
+@Tag(name = "Zutat API", description = "Operations for Zutaten")
 public class ZutatController {
 
     private final ZutatRepository zutatRepository;
@@ -30,6 +36,9 @@ public class ZutatController {
     }
 
     @Get("/{id}")
+    @Operation(summary = "Get a Zutat by ID", description = "Returns a single Zutat")
+    @ApiResponse(responseCode = "200", description = "Found Zutat",
+    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Zutat.class)))
     @ExecuteOn(TaskExecutors.BLOCKING)
         // Returns the entity if id is valid
     Optional<Zutat> getById(long id) {

@@ -3,4 +3,4 @@ defaultPackage: com.github.learwin.platepalbackend
 testFramework: junit
 sourceLanguage: java
 buildTool: gradle_kotlin
-features: [app-name, gradle, h2, hibernate-jpa, http-client-test, java, java-application, jdbc-hikari, junit, logback, micronaut-aot, micronaut-build, micronaut-http-validation, netty-server, properties, readme, serialization-jackson, shade, static-resources]
+features: [app-name, gradle, h2, hibernate-jpa, http-client-test, java, java-application, jdbc-hikari, junit, logback, micronaut-aot, micronaut-build, micronaut-http-validation, netty-server, properties, readme, serialization-jackson, openapi, shade, static-resources]
