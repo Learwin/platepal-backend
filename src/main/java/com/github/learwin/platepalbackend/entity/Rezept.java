@@ -1,5 +1,6 @@
 package com.github.learwin.platepalbackend.entity;
 
+import com.github.learwin.platepalbackend.image.IImage;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
@@ -7,7 +8,7 @@ import jakarta.validation.constraints.Size;
 
 @Serdeable
 @Entity
-public class Rezept{
+public class Rezept implements IImage {
     @Id
     @GeneratedValue(GeneratedValue.Type.AUTO)
     private Long id;
@@ -25,7 +26,9 @@ public class Rezept{
     @Size(max = 255)
     private String foto;
 
-    private int userId;
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user_Id;
 
     public @Size(max = 255) String getName() {
         return name;
@@ -41,18 +44,21 @@ public class Rezept{
     @Column(name = "durchschnittliche_bewertung")
     private Float durchschnittlicheBewertung;
 
+    private int flag;
+
     public Rezept() {
     }
 
-    public Rezept(String anweisungen, int zeit, int schwierigkeit, int defaultPortionen, String foto, int userId, String name, Float durchschnittlicheBewertung) {
+    public Rezept(String anweisungen, int zeit, int schwierigkeit, int defaultPortionen, String foto, User user_Id, Float durchschnittlicheBewertung, int flag) {
         this.anweisungen = anweisungen;
         this.zeit = zeit;
         this.schwierigkeit = schwierigkeit;
         this.defaultPortionen = defaultPortionen;
         this.foto = foto;
-        this.userId = userId;
         this.name = name;
+        this.user_Id = user_Id;
         this.durchschnittlicheBewertung = durchschnittlicheBewertung;
+        this.flag = flag;
     }
 
     public Long getId() {
@@ -103,12 +109,12 @@ public class Rezept{
         this.foto = foto;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getUser_Id() {
+        return user_Id;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser_Id(User user_Id) {
+        this.user_Id = user_Id;
     }
 
     public Float getDurchschnittlicheBewertung() {
@@ -117,5 +123,13 @@ public class Rezept{
 
     public void setDurchschnittlicheBewertung(Float durchschnittlicheBewertung) {
         this.durchschnittlicheBewertung = durchschnittlicheBewertung;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
     }
 }
