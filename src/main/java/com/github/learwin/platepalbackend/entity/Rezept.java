@@ -30,14 +30,6 @@ public class Rezept implements IImage {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user_Id;
 
-    public @Size(max = 255) String getName() {
-        return name;
-    }
-
-    public void setName(@Size(max = 255) String name) {
-        this.name = name;
-    }
-
     @Size(max = 255)
     private String name;
 
@@ -49,7 +41,7 @@ public class Rezept implements IImage {
     public Rezept() {
     }
 
-    public Rezept(String anweisungen, int zeit, int schwierigkeit, int defaultPortionen, String foto, User user_Id, Float durchschnittlicheBewertung, int flag) {
+    public Rezept(String anweisungen, int zeit, int schwierigkeit, int defaultPortionen, String foto, User user_Id, Float durchschnittlicheBewertung, int flag, String name) {
         this.anweisungen = anweisungen;
         this.zeit = zeit;
         this.schwierigkeit = schwierigkeit;
@@ -131,5 +123,13 @@ public class Rezept implements IImage {
 
     public void setFlag(int flag) {
         this.flag = flag;
+    }
+
+    public @Size(max = 255) String getName() {
+        return name;
+    }
+
+    public void setName(@Size(max = 255) String name) {
+        this.name = name;
     }
 }
