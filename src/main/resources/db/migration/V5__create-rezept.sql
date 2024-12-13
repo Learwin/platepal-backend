@@ -5,7 +5,7 @@ CREATE TABLE Rezept (
     SCHWIERIGKEIT               BIGINT         NULL,
     DEFAULT_PORTIONEN           BIGINT           NULL,
     FOTO                        VARCHAR(255)    NULL,
-    USER_ID                     BIGINT           NOT NULL,
+    USER_ID                     BIGINT           NULL,
     DURCHSCHNITTLICHE_BEWERTUNG BIGINT           NULL,
     ZUTAT_ID                    BIGINT          NULL,
     FLAG                        BIGINT          NULL,
