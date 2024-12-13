@@ -28,6 +28,7 @@ dependencies {
     implementation("io.micronaut.sql:micronaut-hibernate-jpa")
     implementation("io.micronaut.data:micronaut-data-tx-hibernate")
     implementation("io.micronaut.openapi:micronaut-openapi-annotations")
+    implementation("com.google.code.gson:gson:2.11.0")
 
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.mysql:mysql-connector-j")
