@@ -2,11 +2,16 @@ package com.github.learwin.platepalbackend.entity;
 
 import com.github.learwin.platepalbackend.image.IImage;
 import io.micronaut.data.annotation.GeneratedValue;
+import io.micronaut.data.annotation.sql.JoinColumn;
+import io.micronaut.data.annotation.sql.JoinTable;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.Size;
+
+import java.util.List;
 
 @Serdeable
 @Entity
@@ -34,10 +39,16 @@ public class Zutat implements IImage {
     @Size(max = 255)
     private String foto;
 
+    @ManyToMany
+    @JoinTable(name = "zutat_allergen",
+            joinColumns = @JoinColumn(name = "zutat_id"),
+            inverseJoinColumns = @JoinColumn(name = "allergen_id"))
+    private List<Allergen> allergene;
+
     public Zutat() {
     }
 
-    public Zutat(String name, Float kcal, Float fett, Float gesaettigteFettsaeuren, Float kohlenhydrate, Float zucker, Float ballaststoffe, Float eiweiss, Float salz, String foto) {
+    public Zutat(String name, Float kcal, Float fett, Float gesaettigteFettsaeuren, Float kohlenhydrate, Float zucker, Float ballaststoffe, Float eiweiss, Float salz, String foto, List<Allergen> allergene) {
         this.name = name;
         this.kcal = kcal;
         this.fett = fett;
@@ -48,6 +59,7 @@ public class Zutat implements IImage {
         this.eiweiss = eiweiss;
         this.salz = salz;
         this.foto = foto;
+        this.allergene = allergene;
     }
 
     public Long getId() {
@@ -138,6 +150,14 @@ public class Zutat implements IImage {
     @Override
     public void setFoto(@Size(max = 255) String foto) {
         this.foto = foto;
+    }
+
+    public List<Allergen> getAllergene() {
+        return allergene;
+    }
+
+    public void setAllergene(List<Allergen> allergene) {
+        this.allergene = allergene;
     }
 }
 

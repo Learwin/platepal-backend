@@ -1,0 +1,1 @@
+insert into Zutat_Allergen (ZUTAT_ID, ALLERGEN_ID) VALUES ('5', '5');
