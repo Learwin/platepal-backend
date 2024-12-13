@@ -57,5 +57,13 @@ public class UserController {
         userRepository.deleteById(id);
     }
 
+    @Get("/get/withmail")
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    Optional<User> getUserByID(@QueryValue String mail){
+        return userRepository.getByemailAdresse(mail);
+    }
+
+
+
 }
 
