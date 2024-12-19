@@ -4,6 +4,7 @@ import com.github.learwin.platepalbackend.PlatePalConstants;
 import com.github.learwin.platepalbackend.entity.Rezept;
 import com.github.learwin.platepalbackend.image.ImageHandler;
 import com.github.learwin.platepalbackend.repository.RezeptRepository;
+import com.github.learwin.platepalbackend.repository.ZutatRezeptRepository;
 import io.micronaut.data.model.Pageable;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -20,9 +21,11 @@ import java.util.Optional;
 @Controller("/rezepte")
 public class RezeptController {
     private final RezeptRepository rezeptRepository;
+    //private final ZutatRezeptRepository zutatRezeptRepository;
 
-    RezeptController(RezeptRepository rezeptRepository) {
+    RezeptController(RezeptRepository rezeptRepository/*, ZutatRezeptRepository zutatRezeptRepository*/) {
         this.rezeptRepository = rezeptRepository;
+        //this.zutatRezeptRepository = zutatRezeptRepository;
     }
 
     @Get("/{id}")
