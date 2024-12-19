@@ -1,0 +1,1 @@
+insert into Zutat_Rezept (ZUTAT_ID, REZEPT_ID, MENGE, EINHEIT_ID) VALUES ('5', '5', '500', '5');

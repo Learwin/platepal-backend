@@ -38,6 +38,12 @@ public class Rezept implements IImage {
 
     private int flag;
 
+//    @OneToMany
+//    @JoinTable(name = "zutat_rezept",
+//            joinColumns = @JoinColumn(name = "rezept_id"),
+//            inverseJoinColumns = @JoinColumn(name = "zutat_id"))
+//    private List<ZutatRezept> zutatenliste;
+
     public Rezept() {
     }
 
