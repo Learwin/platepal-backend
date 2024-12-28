@@ -4,12 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.learwin.platepalbackend.PlatePalConstants;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.data.annotation.*;
-import io.micronaut.data.annotation.GeneratedValue;
-import io.micronaut.data.annotation.Id;
 import io.micronaut.serde.annotation.Serdeable;
-import jakarta.persistence.*;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Serdeable
 @MappedEntity
@@ -28,17 +29,17 @@ public class ZutatDerWoche {
     @NonNull
     @Temporal(TemporalType.DATE)
     @JsonFormat(pattern = PlatePalConstants.TIME_FORMAT)
-    private LocalDateTime von;
+    private LocalDate von;
 
     @NonNull
     @Temporal(TemporalType.DATE)
     @JsonFormat(pattern = PlatePalConstants.TIME_FORMAT)
-    private LocalDateTime bis;
+    private LocalDate bis;
 
     public ZutatDerWoche() {
     }
 
-    public ZutatDerWoche(Zutat zutat, LocalDateTime von, LocalDateTime bis) {
+    public ZutatDerWoche(Zutat zutat, LocalDate von, LocalDate bis) {
         this.zutat = zutat;
         this.von = von;
         this.bis = bis;
@@ -52,19 +53,19 @@ public class ZutatDerWoche {
         this.id = id;
     }
 
-    public @NonNull LocalDateTime getVon() {
+    public @NonNull LocalDate getVon() {
         return von;
     }
 
-    public void setVon(@NonNull LocalDateTime von) {
+    public void setVon(@NonNull LocalDate von) {
         this.von = von;
     }
 
-    public @NonNull LocalDateTime getBis() {
+    public @NonNull LocalDate getBis() {
         return bis;
     }
 
-    public void setBis(@NonNull LocalDateTime bis) {
+    public void setBis(@NonNull LocalDate bis) {
         this.bis = bis;
     }
 

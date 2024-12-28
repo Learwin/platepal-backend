@@ -6,7 +6,7 @@ import java.net.URI;
 
 public class PlatePalConstants {
 
-    public static final String TIME_FORMAT = "yyyy-mm-dd";
+    public static final String TIME_FORMAT = "yyyy-MM-dd";
 
     public static final String IMAGE_DIR = "./images";
     public static final String ZUTAT_IMAGE_DIR = IMAGE_DIR + "/zutat";
