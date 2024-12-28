@@ -5,7 +5,9 @@ import com.github.learwin.platepalbackend.entity.Rezept;
 import com.github.learwin.platepalbackend.image.ImageHandler;
 import com.github.learwin.platepalbackend.repository.RezeptRepository;
 import com.github.learwin.platepalbackend.repository.ZutatRezeptRepository;
+import io.micronaut.data.model.Page;
 import io.micronaut.data.model.Pageable;
+import io.micronaut.data.model.Slice;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
@@ -74,5 +76,11 @@ public class RezeptController {
     @ExecuteOn(TaskExecutors.BLOCKING)
     public HttpResponse<byte[]> getRezeptImage(long id) {
         return ImageHandler.getImageForEntity(id, rezeptRepository, "rezept");
+    }
+
+    @Get(value = "/byname")
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    public Page<Rezept> getRezeptByName(@QueryValue String name, @Valid Pageable pageable) {
+        return rezeptRepository.findByNameContainingIgnoreCase(name, pageable);
     }
 }
