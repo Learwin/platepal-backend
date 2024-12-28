@@ -6,6 +6,8 @@ import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 @Serdeable
 @Entity
 public class Rezept implements IImage {
@@ -44,10 +46,16 @@ public class Rezept implements IImage {
 //            inverseJoinColumns = @JoinColumn(name = "zutat_id"))
 //    private List<ZutatRezept> zutatenliste;
 
+    @ManyToMany
+    @JoinTable(name = "zutat_rezept",
+            joinColumns = @JoinColumn(name = "rezept_id"),
+            inverseJoinColumns = @JoinColumn(name = "zutat_id"))
+    private List<Zutat> zutaten;
+
     public Rezept() {
     }
 
-    public Rezept(String anweisungen, int zeit, int schwierigkeit, int defaultPortionen, String foto, User user_Id, Float durchschnittlicheBewertung, int flag, String name) {
+    public Rezept(String anweisungen, int zeit, int schwierigkeit, int defaultPortionen, String foto, User user_Id, Float durchschnittlicheBewertung, int flag, String name, List<Zutat> zutat) {
         this.anweisungen = anweisungen;
         this.zeit = zeit;
         this.schwierigkeit = schwierigkeit;
@@ -57,6 +65,7 @@ public class Rezept implements IImage {
         this.user_Id = user_Id;
         this.durchschnittlicheBewertung = durchschnittlicheBewertung;
         this.flag = flag;
+        this.zutaten = zutat;
     }
 
     public Long getId() {
@@ -137,5 +146,13 @@ public class Rezept implements IImage {
 
     public void setName(@Size(max = 255) String name) {
         this.name = name;
+    }
+
+    public List<Zutat> getZutaten() {
+        return zutaten;
+    }
+
+    public void setZutaten(List<Zutat> zutaten) {
+        this.zutaten = zutaten;
     }
 }

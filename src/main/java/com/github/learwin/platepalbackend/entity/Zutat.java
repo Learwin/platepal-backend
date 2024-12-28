@@ -45,10 +45,13 @@ public class Zutat implements IImage {
             inverseJoinColumns = @JoinColumn(name = "allergen_id"))
     private List<Allergen> allergene;
 
+    @ManyToMany(mappedBy = "zutaten")
+    private List<Rezept> rezepte;
+
     public Zutat() {
     }
 
-    public Zutat(String name, Float kcal, Float fett, Float gesaettigteFettsaeuren, Float kohlenhydrate, Float zucker, Float ballaststoffe, Float eiweiss, Float salz, String foto, List<Allergen> allergene) {
+    public Zutat(String name, Float kcal, Float fett, Float gesaettigteFettsaeuren, Float kohlenhydrate, Float zucker, Float ballaststoffe, Float eiweiss, Float salz, String foto, List<Allergen> allergene, List<Rezept> rezepte) {
         this.name = name;
         this.kcal = kcal;
         this.fett = fett;
@@ -60,6 +63,7 @@ public class Zutat implements IImage {
         this.salz = salz;
         this.foto = foto;
         this.allergene = allergene;
+        this.rezepte = rezepte;
     }
 
     public Long getId() {
@@ -158,6 +162,14 @@ public class Zutat implements IImage {
 
     public void setAllergene(List<Allergen> allergene) {
         this.allergene = allergene;
+    }
+
+    public List<Rezept> getRezepte() {
+        return rezepte;
+    }
+
+    public void setRezepte(List<Rezept> rezepte) {
+        this.rezepte = rezepte;
     }
 }
 
