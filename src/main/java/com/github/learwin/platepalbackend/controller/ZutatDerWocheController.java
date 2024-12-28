@@ -2,13 +2,12 @@ package com.github.learwin.platepalbackend.controller;
 
 import com.github.learwin.platepalbackend.entity.ZutatDerWoche;
 import com.github.learwin.platepalbackend.repository.ZutatDerWocheRepository;
-import io.micronaut.data.annotation.Query;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +29,7 @@ public class ZutatDerWocheController {
     @ExecuteOn(TaskExecutors.BLOCKING)
     @Get(value = "/current")
     Optional<ZutatDerWoche> getCurrentZDW() {
-        return zutatDerWocheRepository.getCurrentZDW();
+        return zutatDerWocheRepository.findByVonLessThanEqualsAndBisGreaterThanEquals(LocalDate.now(), LocalDate.now());
     }
 
 }
