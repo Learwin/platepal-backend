@@ -8,6 +8,7 @@ import io.micronaut.data.repository.PageableRepository;
 
 @JdbcRepository(dialect = Dialect.MYSQL)
 @Join(value = "allergene", type = Join.Type.FETCH)
+@Join(value = "rezepte", type = Join.Type.FETCH)
 public interface ZutatRepository extends PageableRepository<Zutat, Long> {
 
 }
