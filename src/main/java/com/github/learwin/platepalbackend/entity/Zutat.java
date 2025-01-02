@@ -5,10 +5,7 @@ import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.data.annotation.sql.JoinColumn;
 import io.micronaut.data.annotation.sql.JoinTable;
 import io.micronaut.serde.annotation.Serdeable;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
 import java.util.List;
@@ -45,13 +42,13 @@ public class Zutat implements IImage {
             inverseJoinColumns = @JoinColumn(name = "allergen_id"))
     private List<Allergen> allergene;
 
-    @ManyToMany(mappedBy = "zutaten")
-    private List<Rezept> rezepte;
+    @OneToMany(mappedBy = "zutat_id", cascade = CascadeType.ALL)
+    private List<ZutatRezept> rezeptZutaten;
 
     public Zutat() {
     }
 
-    public Zutat(String name, Float kcal, Float fett, Float gesaettigteFettsaeuren, Float kohlenhydrate, Float zucker, Float ballaststoffe, Float eiweiss, Float salz, String foto, List<Allergen> allergene, List<Rezept> rezepte) {
+    public Zutat(String name, Float kcal, Float fett, Float gesaettigteFettsaeuren, Float kohlenhydrate, Float zucker, Float ballaststoffe, Float eiweiss, Float salz, String foto, List<Allergen> allergene, List<ZutatRezept> rezeptZutaten) {
         this.name = name;
         this.kcal = kcal;
         this.fett = fett;
@@ -63,7 +60,7 @@ public class Zutat implements IImage {
         this.salz = salz;
         this.foto = foto;
         this.allergene = allergene;
-        this.rezepte = rezepte;
+        this.rezeptZutaten = rezeptZutaten;
     }
 
     public Long getId() {
@@ -164,12 +161,12 @@ public class Zutat implements IImage {
         this.allergene = allergene;
     }
 
-    public List<Rezept> getRezepte() {
-        return rezepte;
+    public List<ZutatRezept> getRezeptZutaten() {
+        return rezeptZutaten;
     }
 
-    public void setRezepte(List<Rezept> rezepte) {
-        this.rezepte = rezepte;
+    public void setRezeptZutaten(List<ZutatRezept> rezeptZutaten) {
+        this.rezeptZutaten = rezeptZutaten;
     }
 }
 

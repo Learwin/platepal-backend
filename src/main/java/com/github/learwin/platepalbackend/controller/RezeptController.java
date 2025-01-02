@@ -1,13 +1,13 @@
 package com.github.learwin.platepalbackend.controller;
 
+import com.github.learwin.platepalbackend.DTO.RezeptDto;
 import com.github.learwin.platepalbackend.PlatePalConstants;
+import com.github.learwin.platepalbackend.Service.RezeptService;
 import com.github.learwin.platepalbackend.entity.Rezept;
 import com.github.learwin.platepalbackend.image.ImageHandler;
 import com.github.learwin.platepalbackend.repository.RezeptRepository;
-import com.github.learwin.platepalbackend.repository.ZutatRezeptRepository;
 import io.micronaut.data.model.Page;
 import io.micronaut.data.model.Pageable;
-import io.micronaut.data.model.Slice;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
@@ -23,18 +23,18 @@ import java.util.Optional;
 @Controller("/rezepte")
 public class RezeptController {
     private final RezeptRepository rezeptRepository;
-    //private final ZutatRezeptRepository zutatRezeptRepository;
+    private final RezeptService rezeptService;
 
-    RezeptController(RezeptRepository rezeptRepository/*, ZutatRezeptRepository zutatRezeptRepository*/) {
+    RezeptController(RezeptRepository rezeptRepository, RezeptService rezeptService) {
         this.rezeptRepository = rezeptRepository;
-        //this.zutatRezeptRepository = zutatRezeptRepository;
+        this.rezeptService = rezeptService;
     }
 
     @Get("/{id}")
     @ExecuteOn(TaskExecutors.BLOCKING)
         // Returns the entity if id is valid
-    Optional<Rezept> getById(long id){
-        return rezeptRepository.findById(id);
+    RezeptDto getById(long id){
+        return rezeptService.getRezeptWithZutaten(id);
     }
 
 

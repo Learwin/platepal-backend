@@ -6,16 +6,15 @@ import io.micronaut.data.annotation.Query;
 import io.micronaut.data.jdbc.annotation.JdbcRepository;
 import io.micronaut.data.model.Page;
 import io.micronaut.data.model.Pageable;
-import io.micronaut.data.model.Slice;
 import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.repository.PageableRepository;
 
-import java.util.List;
+import java.util.Optional;
 
 @JdbcRepository(dialect = Dialect.MYSQL)
 @Join(value = "user_Id", type = Join.Type.FETCH)
-@Join(value = "zutaten", type = Join.Type.FETCH)
 public interface RezeptRepository extends PageableRepository<Rezept, Long> {
-
+    @Query("SELECT r.* FROM rezept r JOIN zutat_rezept rz ON r.id = rz.rezept_id JOIN zutat z ON rz.zutat_id = z.id WHERE r.id = :id")
+    Optional<Rezept> findByIdWithZutaten(Long id);
     Page<Rezept> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }
