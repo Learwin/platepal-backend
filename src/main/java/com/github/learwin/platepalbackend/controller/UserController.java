@@ -1,11 +1,15 @@
 package com.github.learwin.platepalbackend.controller;
 
+import com.github.learwin.platepalbackend.PlatePalConstants;
 import com.github.learwin.platepalbackend.entity.User;
+import com.github.learwin.platepalbackend.image.ImageHandler;
 import com.github.learwin.platepalbackend.repository.UserRepository;
 import io.micronaut.data.model.Pageable;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
+import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
+import io.micronaut.http.multipart.CompletedFileUpload;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import jakarta.validation.Valid;
@@ -61,6 +65,18 @@ public class UserController {
     @ExecuteOn(TaskExecutors.BLOCKING)
     Optional<User> getUserByID(@QueryValue String mail){
         return userRepository.getByemailAdresse(mail);
+    }
+
+    @Post(value = "/image/{id}", consumes = {MediaType.MULTIPART_FORM_DATA})
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    HttpResponse<String> uploadUserImage(CompletedFileUpload file, @PathVariable long id) {
+        return ImageHandler.saveImageForEntity(file, id, userRepository, PlatePalConstants.USER_IMAGE_DIR, "usertable");
+    }
+
+    @Get(value = "/image/{id}", produces = MediaType.APPLICATION_OCTET_STREAM)
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    public HttpResponse<byte[]> getUserImage(long id) {
+        return ImageHandler.getImageForEntity(id, userRepository, "usertable");
     }
 
 

@@ -1,5 +1,6 @@
 package com.github.learwin.platepalbackend.entity;
 
+import com.github.learwin.platepalbackend.image.IImage;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.data.annotation.GeneratedValue;
 import io.micronaut.serde.annotation.Serdeable;
@@ -12,7 +13,7 @@ import jakarta.validation.constraints.Size;
 @Serdeable
 @Entity
 @Table(name = "usertable")
-public class User {
+public class User implements IImage {
     @Id
     @GeneratedValue(GeneratedValue.Type.AUTO)
     private Long id;
@@ -29,13 +30,17 @@ public class User {
     @Size(max = 255)
     private String emailAdresse;
 
+    @Size(max = 255)
+    private String foto;
+
     public User(){
     }
 
-    public User(String username, String passwort, String emailAdresse){
+    public User(String username, String passwort, String emailAdresse, String foto){
         this.username = username;
         this.passwort = passwort;
         this.emailAdresse = emailAdresse;
+        this.foto = foto;
     }
 
     public @NonNull Long getId() {
@@ -68,5 +73,15 @@ public class User {
 
     public void setEmailAdresse(@Size(max = 255) String emailAdresse) {
         this.emailAdresse = emailAdresse;
+    }
+
+    @Override
+    public @Size(max = 255) String getFoto() {
+        return foto;
+    }
+
+    @Override
+    public void setFoto(@Size(max = 255) String foto) {
+        this.foto = foto;
     }
 }
