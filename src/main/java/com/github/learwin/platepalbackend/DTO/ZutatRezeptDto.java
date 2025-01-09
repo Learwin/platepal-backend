@@ -3,12 +3,15 @@ package com.github.learwin.platepalbackend.DTO;
 import com.github.learwin.platepalbackend.entity.Rezept;
 import com.github.learwin.platepalbackend.entity.Zutat;
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.serde.annotation.Serdeable;
 
 import java.util.List;
 
 @Introspected
+@Serdeable
 public class ZutatRezeptDto {
 
+    // TODO Einheit und Mengen, ALlergene hinzufügen
     private Rezept rezept;
     private List<Zutat> zutatList;
 

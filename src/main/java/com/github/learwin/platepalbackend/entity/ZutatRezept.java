@@ -1,22 +1,25 @@
 package com.github.learwin.platepalbackend.entity;
 
-import com.github.learwin.platepalbackend.entity.ids.ZutatRezeptId;
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.data.annotation.GeneratedValue;
+import io.micronaut.data.annotation.MappedEntity;
+import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Zutat_Rezept")
+@Serdeable
 public class ZutatRezept {
 
     @Id
-    private ZutatRezeptId id;
+    @GeneratedValue(GeneratedValue.Type.AUTO)
+    private Long id;
 
     @ManyToOne
-    @MapsId("zutat_Id")
     @JoinColumn(name = "zutat_id", referencedColumnName = "id")
     private Zutat zutat_id;
 
     @ManyToOne
-    @MapsId("rezept_Id")
     @JoinColumn(name = "rezept_id", referencedColumnName = "id")
     private Rezept rezept_id;
 
@@ -24,15 +27,17 @@ public class ZutatRezept {
 
     @ManyToOne
     @JoinColumn(name = "einheit_id", referencedColumnName = "id")
-    private Einheit einheitId;
+    private Einheit einheit_id;
 
     public ZutatRezept(){
 
     }
 
-    public ZutatRezept(int menge, Einheit einheitId) {
+    public ZutatRezept(Rezept rezept_id, Zutat zutat_id, int menge, Einheit einheit_id) {
+        this.rezept_id = rezept_id;
+        this.zutat_id = zutat_id;
         this.menge = menge;
-        this.einheitId = einheitId;
+        this.einheit_id = einheit_id;
     }
 
     public Zutat getZutat_id() {
@@ -59,19 +64,19 @@ public class ZutatRezept {
         this.menge = menge;
     }
 
-    public Einheit getEinheitId() {
-        return einheitId;
+    public Einheit getEinheit_id() {
+        return einheit_id;
     }
 
-    public void setEinheitId(Einheit einheitId) {
-        this.einheitId = einheitId;
+    public void setEinheit_id(Einheit einheit_id) {
+        this.einheit_id = einheit_id;
     }
 
-    public ZutatRezeptId getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(ZutatRezeptId id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }
