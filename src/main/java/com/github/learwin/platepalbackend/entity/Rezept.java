@@ -1,5 +1,7 @@
 package com.github.learwin.platepalbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.learwin.platepalbackend.image.IImage;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.data.annotation.GeneratedValue;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @Serdeable
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Rezept implements IImage {
     @Id
     @GeneratedValue(GeneratedValue.Type.AUTO)
@@ -28,6 +31,7 @@ public class Rezept implements IImage {
     private int defaultPortionen;
 
     @Size(max = 255)
+    @Nullable
     private String foto;
 
     @OneToOne
@@ -151,20 +155,4 @@ public class Rezept implements IImage {
     public void setName(@Size(max = 255) String name) {
         this.name = name;
     }
-
-//    public List<Zutat> getZutaten() {
-//        return zutaten;
-//    }
-//
-//    public void setZutaten(List<Zutat> zutaten) {
-//        this.zutaten = zutaten;
-//    }
-
-//    public List<ZutatRezept> getZutatenliste() {
-//        return zutatenliste;
-//    }
-//
-//    public void setZutatenliste(List<ZutatRezept> zutatenliste) {
-//        this.zutatenliste = zutatenliste;
-//    }
 }

@@ -1,16 +1,16 @@
 package com.github.learwin.platepalbackend.controller;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.github.learwin.platepalbackend.DTO.ZutatRezeptDto;
 import com.github.learwin.platepalbackend.PlatePalConstants;
 import com.github.learwin.platepalbackend.entity.Rezept;
 import com.github.learwin.platepalbackend.entity.Zutat;
-import com.github.learwin.platepalbackend.entity.ZutatRezept;
+import com.github.learwin.platepalbackend.entity.ZutatMengeEinheitAllergen;
 import com.github.learwin.platepalbackend.image.ImageHandler;
 import com.github.learwin.platepalbackend.repository.RezeptRepository;
 import com.github.learwin.platepalbackend.repository.ZutatRezeptRepository;
 import io.micronaut.data.model.Page;
 import io.micronaut.data.model.Pageable;
-import io.micronaut.data.model.Slice;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
@@ -20,9 +20,8 @@ import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import jakarta.validation.Valid;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller("/rezepte")
 public class RezeptController {
@@ -51,9 +50,14 @@ public class RezeptController {
 
         var zutatRezept = zutatRezeptRepository.findByRezept_id(rezeptOpt.get());
 
-        var zutatListe = new ArrayList<Zutat>();
+        var zutatListe = new ArrayList<ZutatMengeEinheitAllergen>();
         for (var zutatRezeptItem : zutatRezept) {
-            zutatListe.add(zutatRezeptItem.getZutat_id());
+            var zutatdetail = new ZutatMengeEinheitAllergen();
+            zutatdetail.setZutat(zutatRezeptItem.getZutat_id());
+            zutatdetail.setAllergene(zutatRezeptItem.getZutat_id().getAllergene());
+            zutatdetail.setMenge(zutatRezeptItem.getMenge());
+            zutatdetail.setEinheit(zutatRezeptItem.getEinheit_id());
+            zutatListe.add(zutatdetail);
         }
         ZutatRezeptDto dto = new ZutatRezeptDto(rezeptOpt.get(), zutatListe);
 

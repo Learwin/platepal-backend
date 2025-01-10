@@ -9,6 +9,5 @@ import java.util.Optional;
 
 @JdbcRepository(dialect = Dialect.MYSQL)
 public interface UserRepository extends PageableRepository<User, Long> {
-
     Optional<User> getByemailAdresse(String email);
 }
