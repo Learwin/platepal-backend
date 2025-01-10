@@ -1,13 +1,16 @@
 package com.github.learwin.platepalbackend.controller;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.github.learwin.platepalbackend.DTO.ZutatRezeptDto;
 import com.github.learwin.platepalbackend.PlatePalConstants;
 import com.github.learwin.platepalbackend.entity.Rezept;
+import com.github.learwin.platepalbackend.entity.Zutat;
+import com.github.learwin.platepalbackend.entity.ZutatMengeEinheitAllergen;
 import com.github.learwin.platepalbackend.image.ImageHandler;
 import com.github.learwin.platepalbackend.repository.RezeptRepository;
 import com.github.learwin.platepalbackend.repository.ZutatRezeptRepository;
 import io.micronaut.data.model.Page;
 import io.micronaut.data.model.Pageable;
-import io.micronaut.data.model.Slice;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
@@ -17,17 +20,17 @@ import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import jakarta.validation.Valid;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller("/rezepte")
 public class RezeptController {
     private final RezeptRepository rezeptRepository;
-    //private final ZutatRezeptRepository zutatRezeptRepository;
+    private final ZutatRezeptRepository zutatRezeptRepository;
 
-    RezeptController(RezeptRepository rezeptRepository/*, ZutatRezeptRepository zutatRezeptRepository*/) {
+    RezeptController(RezeptRepository rezeptRepository, ZutatRezeptRepository zutatRezeptRepository) {
         this.rezeptRepository = rezeptRepository;
-        //this.zutatRezeptRepository = zutatRezeptRepository;
+        this.zutatRezeptRepository = zutatRezeptRepository;
     }
 
     @Get("/{id}")
@@ -35,6 +38,30 @@ public class RezeptController {
         // Returns the entity if id is valid
     Optional<Rezept> getById(long id){
         return rezeptRepository.findById(id);
+    }
+
+    @Get("/full/{id}")
+    @ExecuteOn(TaskExecutors.BLOCKING)
+        // Returns the entity if id is valid
+    Optional<ZutatRezeptDto> getZutatById(long id){
+        var rezeptOpt = rezeptRepository.findById(id);
+        if (rezeptOpt.isEmpty())
+            return Optional.empty();
+
+        var zutatRezept = zutatRezeptRepository.findByRezept_id(rezeptOpt.get());
+
+        var zutatListe = new ArrayList<ZutatMengeEinheitAllergen>();
+        for (var zutatRezeptItem : zutatRezept) {
+            var zutatdetail = new ZutatMengeEinheitAllergen();
+            zutatdetail.setZutat(zutatRezeptItem.getZutat_id());
+            zutatdetail.setAllergene(zutatRezeptItem.getZutat_id().getAllergene());
+            zutatdetail.setMenge(zutatRezeptItem.getMenge());
+            zutatdetail.setEinheit(zutatRezeptItem.getEinheit_id());
+            zutatListe.add(zutatdetail);
+        }
+        ZutatRezeptDto dto = new ZutatRezeptDto(rezeptOpt.get(), zutatListe);
+
+        return Optional.of(dto);
     }
 
 

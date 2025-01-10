@@ -2,13 +2,14 @@ package com.github.learwin.platepalbackend.entity;
 
 import com.github.learwin.platepalbackend.image.IImage;
 import io.micronaut.data.annotation.GeneratedValue;
+import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.data.annotation.Relation;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
 @Serdeable
-@Entity
+@MappedEntity
 public class Bewertung implements IImage {
 
     @Id

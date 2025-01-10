@@ -1,7 +1,11 @@
 package com.github.learwin.platepalbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.learwin.platepalbackend.image.IImage;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.data.annotation.GeneratedValue;
+import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -10,6 +14,7 @@ import java.util.List;
 
 @Serdeable
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Rezept implements IImage {
     @Id
     @GeneratedValue(GeneratedValue.Type.AUTO)
@@ -26,6 +31,7 @@ public class Rezept implements IImage {
     private int defaultPortionen;
 
     @Size(max = 255)
+    @Nullable
     private String foto;
 
     @OneToOne
@@ -44,18 +50,19 @@ public class Rezept implements IImage {
 //    @JoinTable(name = "zutat_rezept",
 //            joinColumns = @JoinColumn(name = "rezept_id"),
 //            inverseJoinColumns = @JoinColumn(name = "zutat_id"))
+//    @OneToMany( mappedBy = "rezept_id")
 //    private List<ZutatRezept> zutatenliste;
 
-    @ManyToMany
-    @JoinTable(name = "zutat_rezept",
-            joinColumns = @JoinColumn(name = "rezept_id"),
-            inverseJoinColumns = @JoinColumn(name = "zutat_id"))
-    private List<Zutat> zutaten;
+//    @ManyToMany
+//    @JoinTable(name = "zutat_rezept",
+//            joinColumns = @JoinColumn(name = "rezept_id"),
+//            inverseJoinColumns = @JoinColumn(name = "zutat_id"))
+//    private List<Zutat> zutaten;
 
     public Rezept() {
     }
 
-    public Rezept(String anweisungen, int zeit, int schwierigkeit, int defaultPortionen, String foto, User user_Id, Float durchschnittlicheBewertung, int flag, String name, List<Zutat> zutat) {
+    public Rezept(String anweisungen, int zeit, int schwierigkeit, int defaultPortionen, String foto, User user_Id, Float durchschnittlicheBewertung, int flag, String name/* List<Zutat> zutat, List<ZutatRezept> zutatenliste*/) {
         this.anweisungen = anweisungen;
         this.zeit = zeit;
         this.schwierigkeit = schwierigkeit;
@@ -65,7 +72,8 @@ public class Rezept implements IImage {
         this.user_Id = user_Id;
         this.durchschnittlicheBewertung = durchschnittlicheBewertung;
         this.flag = flag;
-        this.zutaten = zutat;
+        //this.zutatenliste = zutatenliste;
+        //this.zutaten = zutat;
     }
 
     public Long getId() {
@@ -146,13 +154,5 @@ public class Rezept implements IImage {
 
     public void setName(@Size(max = 255) String name) {
         this.name = name;
-    }
-
-    public List<Zutat> getZutaten() {
-        return zutaten;
-    }
-
-    public void setZutaten(List<Zutat> zutaten) {
-        this.zutaten = zutaten;
     }
 }
