@@ -2,11 +2,14 @@ package com.github.learwin.platepalbackend.controller;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.github.learwin.platepalbackend.DTO.RezeptVollDTO;
+import com.github.learwin.platepalbackend.DTO.ZutatDTO;
 import com.github.learwin.platepalbackend.DTO.ZutatRezeptDto;
 import com.github.learwin.platepalbackend.PlatePalConstants;
 import com.github.learwin.platepalbackend.entity.*;
+import com.github.learwin.platepalbackend.entity.ids.ZutatRezeptId;
 import com.github.learwin.platepalbackend.image.ImageHandler;
 import com.github.learwin.platepalbackend.repository.RezeptRepository;
+import com.github.learwin.platepalbackend.repository.ZutatRepository;
 import com.github.learwin.platepalbackend.repository.ZutatRezeptRepository;
 import io.micronaut.data.model.Page;
 import io.micronaut.data.model.Pageable;
@@ -26,10 +29,13 @@ import java.util.stream.Collectors;
 public class RezeptController {
     private final RezeptRepository rezeptRepository;
     private final ZutatRezeptRepository zutatRezeptRepository;
+    private final ZutatRepository zutatRepository;
 
-    RezeptController(RezeptRepository rezeptRepository, ZutatRezeptRepository zutatRezeptRepository) {
+
+    RezeptController(RezeptRepository rezeptRepository, ZutatRezeptRepository zutatRezeptRepository, ZutatRepository zutatRepository) {
         this.rezeptRepository = rezeptRepository;
         this.zutatRezeptRepository = zutatRezeptRepository;
+        this.zutatRepository = zutatRepository;
     }
 
     @Get("/{id}")
@@ -52,8 +58,8 @@ public class RezeptController {
         var zutatListe = new ArrayList<ZutatMengeEinheitAllergen>();
         for (var zutatRezeptItem : zutatRezept) {
             var zutatdetail = new ZutatMengeEinheitAllergen();
-            zutatdetail.setZutat(zutatRezeptItem.getZutat_id());
-            zutatdetail.setAllergene(zutatRezeptItem.getZutat_id().getAllergene());
+            zutatdetail.setZutat(zutatRezeptItem.getId().getZutat_id());
+            zutatdetail.setAllergene(zutatRezeptItem.getId().getZutat_id().getAllergene());
             zutatdetail.setMenge(zutatRezeptItem.getMenge());
             zutatdetail.setEinheit(zutatRezeptItem.getEinheit_id());
             zutatListe.add(zutatdetail);
@@ -88,11 +94,10 @@ public class RezeptController {
 
         for (var zutatdto : rezeptDto.getZutaten()) {
            var zutatRezept = new ZutatRezept();
-           zutatRezept.setRezept_id(createdRezept);
            var zutat = new Zutat();
            zutat.setId((long) zutatdto.getZutat());
            zutatRezept.setMenge(zutatdto.getMenge());
-           zutatRezept.setZutat_id(zutat);
+           zutatRezept.setId(new ZutatRezeptId(zutat, createdRezept));
            zutatRezept.setEinheit_id(zutatdto.getEinheit());
            zutatRezeptRepository.save(zutatRezept);
         }
@@ -101,8 +106,17 @@ public class RezeptController {
 
     @Put
     @ExecuteOn(TaskExecutors.BLOCKING)
-    HttpResponse<Rezept> updateRezept(@Body @Valid Rezept rezept) {
+    HttpResponse<Rezept> updateRezept(@Body @Valid RezeptVollDTO rezeptDto) {
+        Rezept rezept = CheckRezeptEigenschaften(rezeptDto);
+        rezept.setId(rezeptDto.getId());
         var updatedRezept = rezeptRepository.update(rezept);
+        for (var zutatdto : rezeptDto.getZutaten()) {
+            var zutatRezept = CheckZutatRezeptEigenschaften(zutatdto, updatedRezept);
+            if (zutatRezeptRepository.findById(zutatRezept.getId()).isPresent())
+                zutatRezeptRepository.update(zutatRezept);
+            else
+                zutatRezeptRepository.save(zutatRezept);
+        }
         return HttpResponse.status(HttpStatus.OK).body(updatedRezept);
     }
 
@@ -129,5 +143,69 @@ public class RezeptController {
     @ExecuteOn(TaskExecutors.BLOCKING)
     public Page<Rezept> getRezeptByName(@QueryValue String name, @Valid Pageable pageable) {
         return rezeptRepository.findByNameContainingIgnoreCase(name, pageable);
+    }
+
+    private Rezept CheckRezeptEigenschaften(RezeptVollDTO rezeptDto){
+        var rezept = new Rezept();
+        if (rezeptDto.getAnweisungen() != null)
+        {
+            rezept.setAnweisungen(rezeptDto.getAnweisungen());
+        }
+        if (rezeptDto.getName() != null)
+        {
+            rezept.setName(rezeptDto.getName());
+        }
+        if (rezeptDto.getFlag() != null)
+        {
+            rezept.setFlag(rezeptDto.getFlag());
+        }
+        if (rezeptDto.getDefaultPortionen() != null)
+        {
+            rezept.setDefaultPortionen(rezeptDto.getDefaultPortionen());
+        }
+        if (rezeptDto.getSchwierigkeit() != null)
+        {
+            rezept.setSchwierigkeit(rezeptDto.getSchwierigkeit());
+        }
+        if (rezeptDto.getUser() != null)
+        {
+            rezept.setUser_Id(rezeptDto.getUser());
+        }
+        if (rezeptDto.getZeit() != null)
+        {
+            rezept.setZeit(rezeptDto.getZeit());
+        }
+        return rezept;
+    }
+
+    private ZutatRezept CheckZutatRezeptEigenschaften (ZutatDTO zutatDto, Rezept rezept)
+    {
+//        var zutatRezept = new ZutatRezept();
+//        zutatRezept.setRezept_id(createdRezept);
+//        var zutat = new Zutat();
+//        zutat.setId((long) zutatdto.getZutat());
+//        zutatRezept.setMenge(zutatdto.getMenge());
+//        zutatRezept.setZutat_id(zutat);
+//        zutatRezept.setEinheit_id(zutatdto.getEinheit());
+//        zutatRezeptRepository.save(zutatRezept);
+        var zutatRezept = new ZutatRezept();
+        zutatRezept.setId(new ZutatRezeptId());
+        zutatRezept.getId().setRezept_id(rezept);
+        var zutat = new Zutat();
+        if (zutatDto.getZutat() != null)
+        {
+            zutatRezept.setId(new ZutatRezeptId(zutatRepository.findById((long)zutatDto.getZutat()).get(),rezept));
+            zutat.setId((long) zutatDto.getZutat());
+        }
+        if (zutatDto.getMenge() != null)
+        {
+            zutatRezept.setMenge(zutatDto.getMenge());
+        }
+        zutatRezept.getId().setZutat_id(zutat);
+        if (zutatDto.getEinheit() != null)
+        {
+            zutatRezept.setEinheit_id(zutatDto.getEinheit());
+        }
+        return zutatRezept;
     }
 }
