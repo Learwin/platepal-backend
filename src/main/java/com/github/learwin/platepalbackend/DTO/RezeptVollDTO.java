@@ -16,13 +16,13 @@ public class RezeptVollDTO {
 
     private Long id;
     private String anweisungen;
-    private int zeit;
-    private int schwierigkeit;
-    private int defaultPortionen;
+    private Integer zeit;
+    private Integer schwierigkeit;
+    private Integer defaultPortionen;
     private User user;
     private String name;
     private Float durchschnittlicheBewertung;
-    private int flag;
+    private Integer flag;
 
     private List<ZutatDTO> zutaten;
 
@@ -42,27 +42,27 @@ public class RezeptVollDTO {
         this.anweisungen = anweisungen;
     }
 
-    public int getZeit() {
+    public Integer getZeit() {
         return zeit;
     }
 
-    public void setZeit(int zeit) {
+    public void setZeit(Integer zeit) {
         this.zeit = zeit;
     }
 
-    public int getSchwierigkeit() {
+    public Integer getSchwierigkeit() {
         return schwierigkeit;
     }
 
-    public void setSchwierigkeit(int schwierigkeit) {
+    public void setSchwierigkeit(Integer schwierigkeit) {
         this.schwierigkeit = schwierigkeit;
     }
 
-    public int getDefaultPortionen() {
+    public Integer getDefaultPortionen() {
         return defaultPortionen;
     }
 
-    public void setDefaultPortionen(int defaultPortionen) {
+    public void setDefaultPortionen(Integer defaultPortionen) {
         this.defaultPortionen = defaultPortionen;
     }
 
@@ -90,11 +90,11 @@ public class RezeptVollDTO {
         this.durchschnittlicheBewertung = durchschnittlicheBewertung;
     }
 
-    public int getFlag() {
+    public Integer getFlag() {
         return flag;
     }
 
-    public void setFlag(int flag) {
+    public void setFlag(Integer flag) {
         this.flag = flag;
     }
 
