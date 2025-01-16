@@ -1,11 +1,10 @@
 package com.github.learwin.platepalbackend.controller;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.github.learwin.platepalbackend.DTO.RezeptVollDTO;
 import com.github.learwin.platepalbackend.DTO.ZutatRezeptDto;
 import com.github.learwin.platepalbackend.PlatePalConstants;
-import com.github.learwin.platepalbackend.entity.Rezept;
-import com.github.learwin.platepalbackend.entity.Zutat;
-import com.github.learwin.platepalbackend.entity.ZutatMengeEinheitAllergen;
+import com.github.learwin.platepalbackend.entity.*;
 import com.github.learwin.platepalbackend.image.ImageHandler;
 import com.github.learwin.platepalbackend.repository.RezeptRepository;
 import com.github.learwin.platepalbackend.repository.ZutatRezeptRepository;
@@ -74,8 +73,29 @@ public class RezeptController {
 
     @Post
     @ExecuteOn(TaskExecutors.BLOCKING)
-    HttpResponse<Rezept> createRezept(@Body @Valid Rezept rezept) {
+    HttpResponse<Rezept> createRezept(@Body @Valid RezeptVollDTO rezeptDto) {
+
+        var rezept = new Rezept();
+        rezept.setAnweisungen(rezeptDto.getAnweisungen());
+        rezept.setName(rezeptDto.getName());
+        rezept.setFlag(rezeptDto.getFlag());
+        rezept.setDefaultPortionen(rezeptDto.getDefaultPortionen());
+        rezept.setSchwierigkeit(rezeptDto.getSchwierigkeit());
+        rezept.setUser_Id(rezeptDto.getUser());
+        rezept.setZeit(rezeptDto.getZeit());
+
         var createdRezept = rezeptRepository.save(rezept);
+
+        for (var zutatdto : rezeptDto.getZutaten()) {
+           var zutatRezept = new ZutatRezept();
+           zutatRezept.setRezept_id(createdRezept);
+           var zutat = new Zutat();
+           zutat.setId((long) zutatdto.getZutat());
+           zutatRezept.setMenge(zutatdto.getMenge());
+           zutatRezept.setZutat_id(zutat);
+           zutatRezept.setEinheit_id(zutatdto.getEinheit());
+           zutatRezeptRepository.save(zutatRezept);
+        }
         return HttpResponse.status(HttpStatus.CREATED).body(createdRezept);
     }
 
