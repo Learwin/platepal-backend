@@ -41,9 +41,7 @@ public class Zutat implements IImage {
             joinColumns = @JoinColumn(name = "zutat_id"),
             inverseJoinColumns = @JoinColumn(name = "allergen_id"))
     private List<Allergen> allergene;
-
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "zutat_id")
-//    private List<ZutatRezept> rezepte;
+    
 
     public Zutat() {
     }
@@ -161,12 +159,5 @@ public class Zutat implements IImage {
         this.allergene = allergene;
     }
 
-//    public List<ZutatRezept> getRezepte() {
-//        return rezepte;
-//    }
-//
-//    public void setRezepte(List<ZutatRezept> rezepte) {
-//        this.rezepte = rezepte;
-//    }
 }
 
