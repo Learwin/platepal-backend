@@ -1,14 +1,15 @@
 package com.github.learwin.platepalbackend.controller;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.github.learwin.platepalbackend.DTO.RezeptVollDTO;
 import com.github.learwin.platepalbackend.DTO.ZutatDTO;
 import com.github.learwin.platepalbackend.DTO.ZutatRezeptDto;
 import com.github.learwin.platepalbackend.PlatePalConstants;
 import com.github.learwin.platepalbackend.entity.*;
+import com.github.learwin.platepalbackend.entity.ids.RezeptTimerId;
 import com.github.learwin.platepalbackend.entity.ids.ZutatRezeptId;
 import com.github.learwin.platepalbackend.image.ImageHandler;
 import com.github.learwin.platepalbackend.repository.RezeptRepository;
+import com.github.learwin.platepalbackend.repository.RezeptTimerRepository;
 import com.github.learwin.platepalbackend.repository.ZutatRepository;
 import com.github.learwin.platepalbackend.repository.ZutatRezeptRepository;
 import io.micronaut.data.model.Page;
@@ -23,19 +24,20 @@ import io.micronaut.scheduling.annotation.ExecuteOn;
 import jakarta.validation.Valid;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller("/rezepte")
 public class RezeptController {
     private final RezeptRepository rezeptRepository;
     private final ZutatRezeptRepository zutatRezeptRepository;
     private final ZutatRepository zutatRepository;
+    private final RezeptTimerRepository rezeptTimerRepository;
 
 
-    RezeptController(RezeptRepository rezeptRepository, ZutatRezeptRepository zutatRezeptRepository, ZutatRepository zutatRepository) {
+    RezeptController(RezeptRepository rezeptRepository, ZutatRezeptRepository zutatRezeptRepository, ZutatRepository zutatRepository, RezeptTimerRepository rezeptTimerRepository) {
         this.rezeptRepository = rezeptRepository;
         this.zutatRezeptRepository = zutatRezeptRepository;
         this.zutatRepository = zutatRepository;
+        this.rezeptTimerRepository = rezeptTimerRepository;
     }
 
     @Get("/{id}")
@@ -64,7 +66,15 @@ public class RezeptController {
             zutatdetail.setEinheit(zutatRezeptItem.getEinheit_id());
             zutatListe.add(zutatdetail);
         }
-        ZutatRezeptDto dto = new ZutatRezeptDto(rezeptOpt.get(), zutatListe);
+        var rezeptTimer = rezeptTimerRepository.findByRezept_id(rezeptOpt.get());
+        var timerPositionListe = new ArrayList<TimerPosition>();
+        for (var timerPositionItem : rezeptTimer){
+            var timerDetail = new TimerPosition();
+            timerDetail.setTimer(timerPositionItem.getId().getTimer_id());
+            timerDetail.setPosition(timerPositionItem.getPosition());
+            timerPositionListe.add(timerDetail);
+        }
+        ZutatRezeptDto dto = new ZutatRezeptDto(rezeptOpt.get(), zutatListe, timerPositionListe);
 
         return Optional.of(dto);
     }
@@ -84,7 +94,6 @@ public class RezeptController {
         var rezept = new Rezept();
         rezept.setAnweisungen(rezeptDto.getAnweisungen());
         rezept.setName(rezeptDto.getName());
-        rezept.setFlag(rezeptDto.getFlag());
         rezept.setDefaultPortionen(rezeptDto.getDefaultPortionen());
         rezept.setSchwierigkeit(rezeptDto.getSchwierigkeit());
         rezept.setUser_Id(rezeptDto.getUser());
@@ -101,6 +110,13 @@ public class RezeptController {
            zutatRezept.setEinheit_id(zutatdto.getEinheit());
            zutatRezeptRepository.save(zutatRezept);
         }
+
+        for (var timerItem : rezeptDto.getTimer()){
+            var rezeptTimer = new RezeptTimer();
+            rezeptTimer.setId(new RezeptTimerId(timerItem.getTimer(), createdRezept));
+            rezeptTimer.setPosition(timerItem.getPosition());
+            rezeptTimerRepository.save(rezeptTimer);
+        }
         return HttpResponse.status(HttpStatus.CREATED).body(createdRezept);
     }
 
@@ -116,6 +132,13 @@ public class RezeptController {
                 zutatRezeptRepository.update(zutatRezept);
             else
                 zutatRezeptRepository.save(zutatRezept);
+        }
+        for (var timerPosition : rezeptDto.getTimer()){
+            var rezeptTimer = CheckRezeptTimerEigenschaften(timerPosition, rezept);
+            if(rezeptTimerRepository.findById(rezeptTimer.getId()).isPresent())
+                rezeptTimerRepository.update(rezeptTimer);
+            else
+                rezeptTimerRepository.save(rezeptTimer);
         }
         return HttpResponse.status(HttpStatus.OK).body(updatedRezept);
     }
@@ -155,10 +178,6 @@ public class RezeptController {
         {
             rezept.setName(rezeptDto.getName());
         }
-        if (rezeptDto.getFlag() != null)
-        {
-            rezept.setFlag(rezeptDto.getFlag());
-        }
         if (rezeptDto.getDefaultPortionen() != null)
         {
             rezept.setDefaultPortionen(rezeptDto.getDefaultPortionen());
@@ -180,14 +199,6 @@ public class RezeptController {
 
     private ZutatRezept CheckZutatRezeptEigenschaften (ZutatDTO zutatDto, Rezept rezept)
     {
-//        var zutatRezept = new ZutatRezept();
-//        zutatRezept.setRezept_id(createdRezept);
-//        var zutat = new Zutat();
-//        zutat.setId((long) zutatdto.getZutat());
-//        zutatRezept.setMenge(zutatdto.getMenge());
-//        zutatRezept.setZutat_id(zutat);
-//        zutatRezept.setEinheit_id(zutatdto.getEinheit());
-//        zutatRezeptRepository.save(zutatRezept);
         var zutatRezept = new ZutatRezept();
         zutatRezept.setId(new ZutatRezeptId());
         zutatRezept.getId().setRezept_id(rezept);
@@ -207,5 +218,21 @@ public class RezeptController {
             zutatRezept.setEinheit_id(zutatDto.getEinheit());
         }
         return zutatRezept;
+    }
+    private RezeptTimer CheckRezeptTimerEigenschaften (TimerPosition timerPosition, Rezept rezept)
+    {
+        var rezeptTimer = new RezeptTimer();
+        rezeptTimer.setId(new RezeptTimerId());
+        rezeptTimer.getId().setRezept_id(rezept);
+        if(timerPosition.getTimer() != null)
+        {
+            rezeptTimer.setId(new RezeptTimerId(timerPosition.getTimer(), rezept));
+        }
+        if (timerPosition.getPosition() != null)
+        {
+            rezeptTimer.setPosition(timerPosition.getPosition());
+        }
+
+        return rezeptTimer;
     }
 }

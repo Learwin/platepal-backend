@@ -1,5 +1,6 @@
 package com.github.learwin.platepalbackend.DTO;
 
+import com.github.learwin.platepalbackend.entity.TimerPosition;
 import com.github.learwin.platepalbackend.entity.User;
 import com.github.learwin.platepalbackend.entity.Zutat;
 import io.micronaut.core.annotation.Nullable;
@@ -25,6 +26,11 @@ public class RezeptVollDTO {
     private Integer flag;
 
     private List<ZutatDTO> zutaten;
+    private List<TimerPosition> timer;
+
+    public RezeptVollDTO(List<TimerPosition> timer) {
+        this.timer = timer;
+    }
 
     public Long getId() {
         return id;
@@ -106,4 +112,11 @@ public class RezeptVollDTO {
         this.zutaten = zutaten;
     }
 
+    public List<TimerPosition> getTimer() {
+        return timer;
+    }
+
+    public void setTimer(List<TimerPosition> timer) {
+        this.timer = timer;
+    }
 }

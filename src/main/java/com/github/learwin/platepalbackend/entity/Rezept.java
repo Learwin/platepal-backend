@@ -1,11 +1,9 @@
 package com.github.learwin.platepalbackend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.learwin.platepalbackend.image.IImage;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.data.annotation.GeneratedValue;
-import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -43,26 +41,10 @@ public class Rezept implements IImage {
 
     @Column(name = "durchschnittliche_bewertung")
     private Float durchschnittlicheBewertung;
-
-    private int flag;
-
-//    @OneToMany
-//    @JoinTable(name = "zutat_rezept",
-//            joinColumns = @JoinColumn(name = "rezept_id"),
-//            inverseJoinColumns = @JoinColumn(name = "zutat_id"))
-//    @OneToMany( mappedBy = "rezept_id")
-//    private List<ZutatRezept> zutatenliste;
-
-//    @ManyToMany
-//    @JoinTable(name = "zutat_rezept",
-//            joinColumns = @JoinColumn(name = "rezept_id"),
-//            inverseJoinColumns = @JoinColumn(name = "zutat_id"))
-//    private List<Zutat> zutaten;
-
     public Rezept() {
     }
 
-    public Rezept(String anweisungen, int zeit, int schwierigkeit, int defaultPortionen, String foto, User user_Id, Float durchschnittlicheBewertung, int flag, String name/* List<Zutat> zutat, List<ZutatRezept> zutatenliste*/) {
+    public Rezept(String anweisungen, int zeit, int schwierigkeit, int defaultPortionen, String foto, User user_Id, Float durchschnittlicheBewertung, String name) {
         this.anweisungen = anweisungen;
         this.zeit = zeit;
         this.schwierigkeit = schwierigkeit;
@@ -71,9 +53,6 @@ public class Rezept implements IImage {
         this.name = name;
         this.user_Id = user_Id;
         this.durchschnittlicheBewertung = durchschnittlicheBewertung;
-        this.flag = flag;
-        //this.zutatenliste = zutatenliste;
-        //this.zutaten = zutat;
     }
 
     public Long getId() {
@@ -138,14 +117,6 @@ public class Rezept implements IImage {
 
     public void setDurchschnittlicheBewertung(Float durchschnittlicheBewertung) {
         this.durchschnittlicheBewertung = durchschnittlicheBewertung;
-    }
-
-    public int getFlag() {
-        return flag;
-    }
-
-    public void setFlag(int flag) {
-        this.flag = flag;
     }
 
     public @Size(max = 255) String getName() {

@@ -1,6 +1,7 @@
 package com.github.learwin.platepalbackend.DTO;
 
 import com.github.learwin.platepalbackend.entity.Rezept;
+import com.github.learwin.platepalbackend.entity.TimerPosition;
 import com.github.learwin.platepalbackend.entity.Zutat;
 import com.github.learwin.platepalbackend.entity.ZutatMengeEinheitAllergen;
 import io.micronaut.core.annotation.Introspected;
@@ -16,11 +17,17 @@ public class ZutatRezeptDto {
 
     private Rezept rezept;
     private ArrayList<ZutatMengeEinheitAllergen> zutatMengeList;
+    private ArrayList<TimerPosition> timerPositionList;
 
     // Constructor
-    public ZutatRezeptDto(Rezept rezept, ArrayList<ZutatMengeEinheitAllergen> zutatList) {
+    public ZutatRezeptDto(){
+
+    }
+
+    public ZutatRezeptDto(Rezept rezept, ArrayList<ZutatMengeEinheitAllergen> zutatList, ArrayList<TimerPosition> timerPositionList) {
         this.rezept = rezept;
         this.zutatMengeList = zutatList;
+        this.timerPositionList = timerPositionList;
     }
 
     // Getters and Setters
@@ -38,5 +45,13 @@ public class ZutatRezeptDto {
 
     public void setZutatMengeList(ArrayList<ZutatMengeEinheitAllergen> zutatMengeList) {
         this.zutatMengeList = zutatMengeList;
+    }
+
+    public ArrayList<TimerPosition> getTimerPositionList() {
+        return timerPositionList;
+    }
+
+    public void setTimerPositionList(ArrayList<TimerPosition> timerPositionList) {
+        this.timerPositionList = timerPositionList;
     }
 }
