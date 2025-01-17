@@ -9,7 +9,7 @@ import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.repository.PageableRepository;
 
 @JdbcRepository(dialect = Dialect.MYSQL)
-@Join(value = "user_Id", type = Join.Type.FETCH)
+@Join(value = "user_Id", type = Join.Type.LEFT_FETCH)
 public interface RezeptRepository extends PageableRepository<Rezept, Long> {
     Page<Rezept> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }

@@ -1,6 +1,9 @@
 package com.github.learwin.platepalbackend.entity;
 
+import com.github.learwin.platepalbackend.entity.ids.ZutatRezeptId;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.data.annotation.GeneratedValue;
+import io.micronaut.data.annotation.MappedEntity;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 
@@ -9,17 +12,18 @@ import jakarta.persistence.*;
 @Serdeable
 public class ZutatRezept {
 
-    @Id
-    @GeneratedValue(GeneratedValue.Type.AUTO)
-    private Long id;
+    @EmbeddedId
+    private ZutatRezeptId id;
 
-    @ManyToOne
-    @JoinColumn(name = "zutat_id", referencedColumnName = "id")
-    private Zutat zutat_id;
-
-    @ManyToOne
-    @JoinColumn(name = "rezept_id", referencedColumnName = "id")
-    private Rezept rezept_id;
+//    @ManyToOne
+//    @MapsId
+//    @JoinColumn(name = "zutat_id", referencedColumnName = "id")
+//    private Zutat zutat_id;
+//
+//    @ManyToOne
+//    @MapsId
+//    @JoinColumn(name = "rezept_id", referencedColumnName = "id")
+//    private Rezept rezept_id;
 
     private int menge;
 
@@ -31,28 +35,28 @@ public class ZutatRezept {
 
     }
 
-    public ZutatRezept(Rezept rezept_id, Zutat zutat_id, int menge, Einheit einheit_id) {
-        this.rezept_id = rezept_id;
-        this.zutat_id = zutat_id;
+    public ZutatRezept(/*Rezept rezept_id, Zutat zutat_id, */int menge, Einheit einheit_id) {
+//        this.rezept_id = rezept_id;
+//        this.zutat_id = zutat_id;
         this.menge = menge;
         this.einheit_id = einheit_id;
     }
 
-    public Zutat getZutat_id() {
-        return zutat_id;
-    }
-
-    public void setZutat_id(Zutat zutat_id) {
-        this.zutat_id = zutat_id;
-    }
-
-    public Rezept getRezept_id() {
-        return rezept_id;
-    }
-
-    public void setRezept_id(Rezept rezept_id) {
-        this.rezept_id = rezept_id;
-    }
+//    public Zutat getZutat_id() {
+//        return zutat_id;
+//    }
+//
+//    public void setZutat_id(Zutat zutat_id) {
+//        this.zutat_id = zutat_id;
+//    }
+//
+//    public Rezept getRezept_id() {
+//        return rezept_id;
+//    }
+//
+//    public void setRezept_id(Rezept rezept_id) {
+//        this.rezept_id = rezept_id;
+//    }
 
     public int getMenge() {
         return menge;
@@ -70,11 +74,11 @@ public class ZutatRezept {
         this.einheit_id = einheit_id;
     }
 
-    public Long getId() {
+    public ZutatRezeptId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(ZutatRezeptId id) {
         this.id = id;
     }
 }
