@@ -33,14 +33,17 @@ public class User implements IImage {
     @Size(max = 255)
     private String foto;
 
+    private Integer flag;
+
     public User(){
     }
 
-    public User(String username, String passwort, String emailAdresse, String foto){
+    public User(String username, String passwort, String emailAdresse, String foto, Integer flag){
         this.username = username;
         this.passwort = passwort;
         this.emailAdresse = emailAdresse;
         this.foto = foto;
+        this.flag = flag;
     }
 
     public @NonNull Long getId() {
@@ -83,5 +86,13 @@ public class User implements IImage {
     @Override
     public void setFoto(@Size(max = 255) String foto) {
         this.foto = foto;
+    }
+
+    public Integer getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Integer flag) {
+        this.flag = flag;
     }
 }
