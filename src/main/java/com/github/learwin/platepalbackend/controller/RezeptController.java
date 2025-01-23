@@ -1,5 +1,6 @@
 package com.github.learwin.platepalbackend.controller;
 
+import com.github.learwin.platepalbackend.DTO.NutritionDTO;
 import com.github.learwin.platepalbackend.DTO.RezeptVollDTO;
 import com.github.learwin.platepalbackend.DTO.ZutatDTO;
 import com.github.learwin.platepalbackend.DTO.ZutatRezeptDto;
@@ -43,14 +44,14 @@ public class RezeptController {
     @Get("/{id}")
     @ExecuteOn(TaskExecutors.BLOCKING)
         // Returns the entity if id is valid
-    Optional<Rezept> getById(long id){
+    Optional<Rezept> getById(long id) {
         return rezeptRepository.findById(id);
     }
 
     @Get("/full/{id}")
     @ExecuteOn(TaskExecutors.BLOCKING)
         // Returns the entity if id is valid
-    Optional<ZutatRezeptDto> getZutatById(long id){
+    Optional<ZutatRezeptDto> getZutatById(long id) {
         var rezeptOpt = rezeptRepository.findById(id);
         if (rezeptOpt.isEmpty())
             return Optional.empty();
@@ -68,7 +69,7 @@ public class RezeptController {
         }
         var rezeptTimer = rezeptTimerRepository.findByRezept_id(rezeptOpt.get());
         var timerPositionListe = new ArrayList<TimerPosition>();
-        for (var timerPositionItem : rezeptTimer){
+        for (var timerPositionItem : rezeptTimer) {
             var timerDetail = new TimerPosition();
             timerDetail.setTimer(timerPositionItem.getId().getTimer_id());
             timerDetail.setPosition(timerPositionItem.getPosition());
@@ -102,16 +103,16 @@ public class RezeptController {
         var createdRezept = rezeptRepository.save(rezept);
 
         for (var zutatdto : rezeptDto.getZutaten()) {
-           var zutatRezept = new ZutatRezept();
-           var zutat = new Zutat();
-           zutat.setId((long) zutatdto.getZutat());
-           zutatRezept.setMenge(zutatdto.getMenge());
-           zutatRezept.setId(new ZutatRezeptId(zutat, createdRezept));
-           zutatRezept.setEinheit_id(zutatdto.getEinheit());
-           zutatRezeptRepository.save(zutatRezept);
+            var zutatRezept = new ZutatRezept();
+            var zutat = new Zutat();
+            zutat.setId((long) zutatdto.getZutat());
+            zutatRezept.setMenge(zutatdto.getMenge());
+            zutatRezept.setId(new ZutatRezeptId(zutat, createdRezept));
+            zutatRezept.setEinheit_id(zutatdto.getEinheit());
+            zutatRezeptRepository.save(zutatRezept);
         }
 
-        for (var timerItem : rezeptDto.getTimer()){
+        for (var timerItem : rezeptDto.getTimer()) {
             var rezeptTimer = new RezeptTimer();
             rezeptTimer.setId(new RezeptTimerId(timerItem.getTimer(), createdRezept));
             rezeptTimer.setPosition(timerItem.getPosition());
@@ -133,9 +134,9 @@ public class RezeptController {
             else
                 zutatRezeptRepository.save(zutatRezept);
         }
-        for (var timerPosition : rezeptDto.getTimer()){
+        for (var timerPosition : rezeptDto.getTimer()) {
             var rezeptTimer = CheckRezeptTimerEigenschaften(timerPosition, rezept);
-            if(rezeptTimerRepository.findById(rezeptTimer.getId()).isPresent())
+            if (rezeptTimerRepository.findById(rezeptTimer.getId()).isPresent())
                 rezeptTimerRepository.update(rezeptTimer);
             else
                 rezeptTimerRepository.save(rezeptTimer);
@@ -168,68 +169,82 @@ public class RezeptController {
         return rezeptRepository.findByNameContainingIgnoreCase(name, pageable);
     }
 
-    private Rezept CheckRezeptEigenschaften(RezeptVollDTO rezeptDto){
+    @Get(value = "/nutrition/{id}")
+    @ExecuteOn(TaskExecutors.BLOCKING)
+    public NutritionDTO getNutritionForRecipe(long id) {
+        var rezeptOpt = getZutatById(id);
+        var nutrition = new NutritionDTO();
+
+        if (rezeptOpt.isPresent()) {
+            var rezept = rezeptOpt.get();
+
+            for (var zutatMenge : rezept.getZutatMengeList()) {
+                var menge = zutatMenge.getMenge();
+                var zutat = zutatMenge.getZutat();
+                var factor = 0.01f;
+                nutrition.setKcal(nutrition.getKcal() + (menge * factor * zutat.getKcal()));
+                nutrition.setFett(nutrition.getFett() + (menge * factor * zutat.getFett()));
+                nutrition.setGesaettigteFettsaeuren(nutrition.getGesaettigteFettsaeuren() + (menge * factor * zutat.getGesaettigteFettsaeuren()));
+                nutrition.setKohlenhydrate(nutrition.getKohlenhydrate() + (menge * factor * zutat.getKohlenhydrate()));
+                nutrition.setZucker(nutrition.getZucker() + (menge * factor * zutat.getZucker()));
+                nutrition.setBallaststoffe(nutrition.getBallaststoffe() + (menge * factor * zutat.getBallaststoffe()));
+                nutrition.setEiweiss(nutrition.getEiweiss() + (menge * factor * zutat.getEiweiss()));
+                nutrition.setSalz(nutrition.getSalz() + (menge * factor * zutat.getSalz()));
+            }
+        }
+        return nutrition;
+    }
+
+    private Rezept CheckRezeptEigenschaften(RezeptVollDTO rezeptDto) {
         var rezept = new Rezept();
-        if (rezeptDto.getAnweisungen() != null)
-        {
+        if (rezeptDto.getAnweisungen() != null) {
             rezept.setAnweisungen(rezeptDto.getAnweisungen());
         }
-        if (rezeptDto.getName() != null)
-        {
+        if (rezeptDto.getName() != null) {
             rezept.setName(rezeptDto.getName());
         }
-        if (rezeptDto.getDefaultPortionen() != null)
-        {
+        if (rezeptDto.getDefaultPortionen() != null) {
             rezept.setDefaultPortionen(rezeptDto.getDefaultPortionen());
         }
-        if (rezeptDto.getSchwierigkeit() != null)
-        {
+        if (rezeptDto.getSchwierigkeit() != null) {
             rezept.setSchwierigkeit(rezeptDto.getSchwierigkeit());
         }
-        if (rezeptDto.getUser() != null)
-        {
+        if (rezeptDto.getUser() != null) {
             rezept.setUser_Id(rezeptDto.getUser());
         }
-        if (rezeptDto.getZeit() != null)
-        {
+        if (rezeptDto.getZeit() != null) {
             rezept.setZeit(rezeptDto.getZeit());
         }
         return rezept;
     }
 
-    private ZutatRezept CheckZutatRezeptEigenschaften (ZutatDTO zutatDto, Rezept rezept)
-    {
+    private ZutatRezept CheckZutatRezeptEigenschaften(ZutatDTO zutatDto, Rezept rezept) {
         var zutatRezept = new ZutatRezept();
         zutatRezept.setId(new ZutatRezeptId());
         zutatRezept.getId().setRezept_id(rezept);
         var zutat = new Zutat();
-        if (zutatDto.getZutat() != null)
-        {
-            zutatRezept.setId(new ZutatRezeptId(zutatRepository.findById((long)zutatDto.getZutat()).get(),rezept));
+        if (zutatDto.getZutat() != null) {
+            zutatRezept.setId(new ZutatRezeptId(zutatRepository.findById((long) zutatDto.getZutat()).get(), rezept));
             zutat.setId((long) zutatDto.getZutat());
         }
-        if (zutatDto.getMenge() != null)
-        {
+        if (zutatDto.getMenge() != null) {
             zutatRezept.setMenge(zutatDto.getMenge());
         }
         zutatRezept.getId().setZutat_id(zutat);
-        if (zutatDto.getEinheit() != null)
-        {
+        if (zutatDto.getEinheit() != null) {
             zutatRezept.setEinheit_id(zutatDto.getEinheit());
         }
         return zutatRezept;
     }
-    private RezeptTimer CheckRezeptTimerEigenschaften (TimerPosition timerPosition, Rezept rezept)
-    {
+
+    private RezeptTimer CheckRezeptTimerEigenschaften(TimerPosition timerPosition, Rezept rezept) {
         var rezeptTimer = new RezeptTimer();
         rezeptTimer.setId(new RezeptTimerId());
         rezeptTimer.getId().setRezept_id(rezept);
-        if(timerPosition.getTimer() != null)
-        {
+        if (timerPosition.getTimer() != null) {
             rezeptTimer.setId(new RezeptTimerId(timerPosition.getTimer(), rezept));
         }
-        if (timerPosition.getPosition() != null)
-        {
+        if (timerPosition.getPosition() != null) {
             rezeptTimer.setPosition(timerPosition.getPosition());
         }
 
