@@ -7,6 +7,6 @@ import io.micronaut.data.model.query.builder.sql.Dialect;
 import io.micronaut.data.repository.PageableRepository;
 
 @JdbcRepository(dialect = Dialect.MYSQL)
-@Join(value = "zutaten", type = Join.Type.FETCH)
+@Join(value = "zutaten", type = Join.Type.LEFT_FETCH)
 public interface AllergenRepository extends PageableRepository<Allergen, Long> {
 }
