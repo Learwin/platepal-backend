@@ -1,4 +1,13 @@
-insert into ALlergen (ID, NAME) VALUES ('5', 'Nüsse');
-insert into ALlergen (ID, NAME) VALUES ('8', 'Laktose');
-insert into ALlergen (ID, NAME) VALUES ('11', 'Honig');
-insert into ALlergen (ID, NAME) VALUES ('14', 'Erdnüsse');
+insert into ALlergen (NAME) VALUES ('Nüsse');
+insert into ALlergen (NAME) VALUES ('Laktose');
+insert into ALlergen (NAME) VALUES ('Honig');
+insert into ALlergen (NAME) VALUES ('Erdnüsse');
+insert into ALlergen (NAME) VALUES ('Sellerie');
+insert into ALlergen (NAME) VALUES ('Fleisch');
+insert into ALlergen (NAME) VALUES ('Rind');
+insert into ALlergen (NAME) VALUES ('Schwein');
+insert into ALlergen (NAME) VALUES ('Huhn');
+insert into ALlergen (NAME) VALUES ('Fisch');
+insert into ALlergen (NAME) VALUES ('Vegan');
+insert into ALlergen (NAME) VALUES ('Vegetarisch');
+insert into ALlergen (NAME) VALUES ('Gluten');

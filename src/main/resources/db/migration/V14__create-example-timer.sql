@@ -1,4 +1,12 @@
 insert into Timer (ZEIT) VALUES ('5');
 insert into Timer (ZEIT) VALUES ('10');
 insert into Timer (ZEIT) VALUES ('15');
+insert into Timer (ZEIT) VALUES ('20');
+insert into Timer (ZEIT) VALUES ('25');
 insert into Timer (ZEIT) VALUES ('30');
+insert into Timer (ZEIT) VALUES ('35');
+insert into Timer (ZEIT) VALUES ('40');
+insert into Timer (ZEIT) VALUES ('45');
+insert into Timer (ZEIT) VALUES ('50');
+insert into Timer (ZEIT) VALUES ('55');
+insert into Timer (ZEIT) VALUES ('60');

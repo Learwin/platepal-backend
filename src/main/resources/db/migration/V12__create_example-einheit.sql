@@ -1,4 +1,8 @@
-insert into Einheit (ID, NAME, ABKUERZUNG) VALUES ('5', 'Gramm', 'g');
-insert into Einheit (ID, NAME, ABKUERZUNG) VALUES ('8', 'Liter', 'l');
-insert into Einheit (ID, NAME, ABKUERZUNG) VALUES ('11', 'Milliliter', 'ml');
-insert into Einheit (ID, NAME, ABKUERZUNG) VALUES ('14', 'Packung', 'Pck');
+insert into Einheit (NAME, ABKUERZUNG) VALUES ('Gramm', 'g');
+insert into Einheit (NAME, ABKUERZUNG) VALUES ('Liter', 'l');
+insert into Einheit (NAME, ABKUERZUNG) VALUES ('Milliliter', 'ml');
+insert into Einheit (NAME, ABKUERZUNG) VALUES ('Packung', 'Pck');
+insert into Einheit (NAME, ABKUERZUNG) VALUES ('Stück', 'Stk');
+insert into Einheit (NAME, ABKUERZUNG) VALUES ('Ei', 'Ei');
+insert into Einheit (NAME, ABKUERZUNG) VALUES ('Esslöffel', 'EL');
+insert into Einheit (NAME, ABKUERZUNG) VALUES ('Teelöffel', 'TL');
