@@ -1,1 +1,18 @@
-insert into Rezept_TIMER (TIMER_ID, REZEPT_ID, POSITION_TIMER) VALUES ('5', '5', '1');
+INSERT INTO `rezept_timer` (`TIMER_ID`, `REZEPT_ID`, `POSITION_TIMER`) VALUES
+(10, 1, 2),
+(10, 4, 2),
+(10, 5, 2),
+(10, 16, 1),
+(20, 2, 1),
+(20, 13, 1),
+(20, 16, 2),
+(25, 7, 1),
+(25, 10, 1),
+(25, 12, 1),
+(30, 14, 1),
+(30, 18, 1),
+(35, 1, 1),
+(35, 3, 1),
+(60, 4, 1),
+(60, 5, 1),
+(60, 20, 1);
